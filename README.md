@@ -13,7 +13,7 @@ Send Travis build notifications to a Discord channel via webhooks - ready to dep
 * Click "server settings"
 * Go to "Webhooks" tab
 * "Create Webhook"
-* Give it a name (doesn't matter what it is, it'll get renamed to "Travis CI",
+* Give it a name (doesn't matter what it is, it'll get renamed to "Travis CI"),
   choose a channel, copy the URL to your clipboard, click save
 
 ### Setting it all up
