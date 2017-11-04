@@ -29,8 +29,7 @@ def badge():
     data = requests.get(DISCORD_JSON)
     data = json.loads(data.text)
     numberOfOnlineUsers = len(data['members'])
-    onlineString = " Online"
-    onlineUsersString = numberOfOnlineUsers + onlineString
+    onlineUsersString = (str numberOfOnlineUsers) + " Online"
 
     return json.dumps({'users': onlineUsersString})
 
