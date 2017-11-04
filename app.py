@@ -16,6 +16,7 @@ with open("config.yaml") as file:
     config = yaml.load(file)
 
 DISCORD_WEBHOOK = config["discord-webhook"]
+DISCORD_JSON = config["discord-json"]
 COLORS = config["colors"]
 
 
@@ -23,6 +24,13 @@ app = Flask(__name__)
 # Is this even needed?
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "idk")
 
+@app.route("/badge", methods=["GET"])
+def badge():
+    data = json.loads(DISCORD_JSON)
+    numberOfOnlineUsers = len(item_dict['members'])
+    onlineUsersString = numberOfOnlineUsers + "Online"
+
+    return json.dumps({'users': onlineUsersString})
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
