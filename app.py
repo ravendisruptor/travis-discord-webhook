@@ -26,7 +26,7 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "idk")
 
 @app.route("/badge", methods=["GET"])
 def badge():
-    data = json.loads(requests.get(DISCORD_JSON))
+    data = json.loads(request.get(DISCORD_JSON))
     numberOfOnlineUsers = len(data['members'])
     onlineUsersString = numberOfOnlineUsers + "Online"
 
