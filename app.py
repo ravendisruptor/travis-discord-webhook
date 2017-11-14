@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import sys
 
 from flask import Flask, request
 import requests
@@ -37,6 +38,9 @@ def badge():
 def webhook():
     data = request.form["payload"]
     data = json.loads(data)
+
+    if (data["repository"]["owner_name"] != "ArmaAchilles")
+        sys.exit()
 
     # Force lower because yaml uses lower case
     result = data["status_message"].lower()
