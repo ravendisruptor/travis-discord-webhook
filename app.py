@@ -42,6 +42,9 @@ def webhook():
     if (data["repository"]["owner_name"] != "ArmaAchilles"):
         sys.exit()
 
+    if (data["pull_request"]):
+        sys.exit()
+
     # Force lower because yaml uses lower case
     result = data["status_message"].lower()
 
