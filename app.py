@@ -29,8 +29,7 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "idk")
 def badge():
     data = requests.get(DISCORD_JSON)
     data = json.loads(data.text)
-    numberOfOnlineUsers = len(data['members'])
-    onlineUsersString = str (numberOfOnlineUsers) + " Online"
+    onlineUsersString = str (len(data['members'])) + " Online"
 
     return json.dumps({'users': onlineUsersString})
 
@@ -40,9 +39,6 @@ def webhook():
     data = json.loads(data)
 
     if (data["repository"]["owner_name"] != "ArmaAchilles"):
-        sys.exit()
-
-    if (data["pull_request"]):
         sys.exit()
 
     # Force lower because yaml uses lower case
