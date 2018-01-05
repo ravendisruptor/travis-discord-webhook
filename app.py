@@ -20,6 +20,8 @@ DISCORD_WEBHOOK = config["discord-webhook"]
 DISCORD_JSON = config["discord-json"]
 COLORS = config["colors"]
 
+SW_JSON = config["sw-json"]
+SW_JSON_ID = config["sw-json-file-id"]
 
 app = Flask(__name__)
 # Is this even needed?
@@ -27,11 +29,44 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "idk")
 
 @app.route("/badge", methods=["GET"])
 def badge():
+    # Gets online users
     data = requests.get(DISCORD_JSON)
     data = json.loads(data.text)
     onlineUsersString = str (len(data['members'])) + " Online"
 
-    return json.dumps({'users': onlineUsersString})
+    # Gets total downloaded (from SW and GitHub)
+    # Gets lifetime subscriptions from Steam Workshop
+    data = requests.post(SW_JSON, {"itemcount": 1, "publishedfileids[0]": SW_JSON_ID})
+    data = json.loads(data.text)
+    totalDownloadsSteam = int(data["response"]["publishedfiledetails"][0]["lifetime_subscriptions"])
+
+    # Gets all downloads from GitHub
+    data = requests.get('https://api.github.com/repos/ArmaAchilles/AresModAchillesExpansion/releases')
+    data = json.loads(data.text)
+    totalDownloadsGitHub = 0
+
+    # https://github.com/mmilidoni/github-downloads-count/blob/af4ea8ad1148450a4135c1404a58f6719ceb8960/gdc#L63
+    for releases in data:
+        if "assets" in releases:
+            for asset in releases['assets']:
+                totalDownloadsGitHub += asset['download_count']
+
+    # Returns a JSON
+    return json.dumps(
+        {
+            'users': onlineUsersString,
+            'downloads': human_format(totalDownloadsSteam + totalDownloadsGitHub)
+        }
+    )
+
+# https://stackoverflow.com/a/579376
+def human_format(num):
+    magnitude = 0
+    while abs(num) >= 1000:
+        magnitude += 1
+        num /= 1000.0
+    # add more suffixes if you need them
+    return '%.2f%s' % (num, ['', 'k', 'm'][magnitude])
 
 @app.route("/webhook", methods=["POST"])
 def webhook():

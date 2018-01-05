@@ -1,6 +1,8 @@
 discord-webhook: https://discordapp.com/api/webhooks/370959388963241984/1tuO6VvxB_Kg0Nzhx0UshDwNrNF9KZOFb7Yv-b7EWuJR1bTEre9c9cC8uMHoq8z-0JCv
 discord-json: https://discordapp.com/api/guilds/364823341506363392/widget.json
 
+sw-json: https://api.steampowered.com/ISteamRemoteStorage/GetPublishedFileDetails/v1/
+sw-json-file-id: 723217262
 
 colors:
   pending: 15588927        # #EDDE3F
