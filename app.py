@@ -3,7 +3,7 @@ import logging
 import os
 import sys
 
-from flask import Flask, request
+from flask import Flask, request, Response
 import requests
 import yaml
 
@@ -52,12 +52,12 @@ def badge():
                 totalDownloadsGitHub += asset['download_count']
 
     # Returns a JSON
-    return json.dumps(
+    return Response(json.dumps(
         {
             'users': onlineUsersString,
             'downloads': human_format(totalDownloadsSteam + totalDownloadsGitHub)
         }
-    )
+    ), mimetype='application/json')
 
 # https://stackoverflow.com/a/579376
 def human_format(num):
