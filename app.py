@@ -51,11 +51,15 @@ def badge():
             for asset in releases['assets']:
                 totalDownloadsGitHub += asset['download_count']
 
+    # get current version
+    tagName = data[0]['tag_name']
+
     # Returns a JSON
     return Response(json.dumps(
         {
             'users': onlineUsersString,
-            'downloads': human_format(totalDownloadsSteam + totalDownloadsGitHub)
+            'downloads': human_format(totalDownloadsSteam + totalDownloadsGitHub),
+            'version': tagName.replace("v","")
         }
     ), mimetype='application/json')
 
