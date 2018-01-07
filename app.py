@@ -58,7 +58,7 @@ def badge():
     return Response(json.dumps(
         {
             'users': onlineUsersString,
-            'downloads': human_format(totalDownloadsSteam + totalDownloadsGitHub),
+            'downloads': "{:,}".format(totalDownloadsSteam + totalDownloadsGitHub),
             'version': tagName.replace("v","")
         }
     ), mimetype='application/json')
