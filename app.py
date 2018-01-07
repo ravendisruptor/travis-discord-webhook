@@ -50,16 +50,12 @@ def badge():
         if "assets" in releases:
             for asset in releases['assets']:
                 totalDownloadsGitHub += asset['download_count']
-    
-    # get current version
-    releaseTag = data[0]['tag_name']
 
     # Returns a JSON
     return Response(json.dumps(
         {
             'users': onlineUsersString,
-            'downloads': human_format(totalDownloadsSteam + totalDownloadsGitHub),
-            'version': releaseTag[1:]
+            'downloads': human_format(totalDownloadsSteam + totalDownloadsGitHub)
         }
     ), mimetype='application/json')
 
@@ -70,7 +66,7 @@ def human_format(num):
         magnitude += 1
         num /= 1000.0
     # add more suffixes if you need them
-    return '%.0f%s' % (num, ['', 'k', 'm'][magnitude])
+    return '%.2f%s' % (num, ['', 'k', 'm'][magnitude])
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
