@@ -58,7 +58,7 @@ def badge():
     return Response(json.dumps(
         {
             'users': onlineUsersString,
-            'downloads': "{:,}".format(totalDownloadsSteam + totalDownloadsGitHub),
+            'downloads': human_format(totalDownloadsSteam + totalDownloadsGitHub),
             'version': tagName.replace("v","")
         }
     ), mimetype='application/json')
@@ -70,7 +70,7 @@ def human_format(num):
         magnitude += 1
         num /= 1000.0
     # add more suffixes if you need them
-    return '%.2f%s' % (num, ['', 'k', 'm'][magnitude])
+    return '{}{}'.format(round(num), ['', 'k', 'm'][magnitude])
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
