@@ -47,7 +47,7 @@ def badge():
 
     # Gets all downloads from GitHub
     data = requests.get(
-        'https://api.github.com/repos/ArmaAchilles/AresModAchillesExpansion/releases')
+        'https://api.github.com/repos/ArmaAchilles/Achilles/releases')
     data = json.loads(data.text)
     totalDownloadsGitHub = 0
 
