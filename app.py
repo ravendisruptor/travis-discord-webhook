@@ -16,8 +16,9 @@ PAYLOAD_COMMIT_URL = "https://github.com/{repository[owner_name]}/{repository[na
 with open("config.yaml") as file:
     config = yaml.load(file)
 
-DISCORD_WEBHOOK = config["discord-webhook"]
-DISCORD_WEBHOOK_KARMANOR = config["discord-webhook-karmanor"]
+# Fetch the env variables from Heroku os.environ for security reasons...
+DISCORD_WEBHOOK = os.environ["DISCORD_WEBHOOK"]
+DISCORD_WEBHOOK_KARMANOR = os.environ["DISCORD_WEBHOOK_KARMANOR"]
 
 DISCORD_JSON = config["discord-json"]
 COLORS = config["colors"]
