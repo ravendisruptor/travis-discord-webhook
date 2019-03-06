@@ -19,9 +19,11 @@ with open("config.yaml") as file:
 # Fetch the env variables from Heroku os.environ for security reasons...
 DISCORD_WEBHOOK = os.environ["DISCORD_WEBHOOK"]
 DISCORD_WEBHOOK_KARMANOR = os.environ["DISCORD_WEBHOOK_KARMANOR"]
+DISCORD_WEBHOOK_AZURE = os.environ["DISCORD_WEBHOOK_AZURE"]
 
 DISCORD_JSON = config["discord-json"]
 COLORS = config["colors"]
+COLORS_AZURE = config["colors-azure"]
 
 SW_JSON = config["sw-json"]
 SW_JSON_ID = config["sw-json-file-id"]
@@ -165,6 +167,49 @@ def webhook_karmanor():
                             "Content-Type": "application/json"})
 
     # https://stackoverflow.com/a/19569090
+    return resp.text, resp.status_code, resp.headers.items()
+
+@app.route("/azure", methods=["POST"])
+def azure():
+    data = request.get_json()
+
+    resourceJson = requests.get(data["resource"]["url"]).json()
+
+    if (resourceJson["repository"]["id"] != "ArmaAchilles/Achilles"):
+        sys.exit()
+
+    result = resourceJson["result"].lower()
+
+    color = COLORS_AZURE[result]
+
+    commit = requests.get("https://api.github.com/repos/ArmaAchilles/Achilles/commits/" + resourceJson["sourceVersion"]).json()
+
+    branch = resourceJson["sourceBranch"].split('/')[2]
+
+    payload = {
+        "username": "Azure Pipelines",
+        "avatar_url": "https://i.imgur.com/2PJdoTK.png",
+        "embeds": [{
+            "color": color,
+            "author": {
+                "name": commit["author"]["login"],
+                "url": commit["author"]["html_url"],
+                "icon_url": commit["author"]["avatar_url"]
+            },
+            "title": "[{repository}:{branch}] Build #{number} {result}".format(
+                repository="Achilles", branch=branch, number=resourceJson["id"], result=result.capitalize()
+            ),
+            "url": resourceJson["_links"]["web"]["href"],
+            "description": "[`{commit:.7}`]({url}) {message}".format(
+                commit=commit["sha"], url=commit["html_url"], message=commit["commit"]["message"]
+            ),
+            "timestamp": resourceJson["finishTime"]
+        }]
+    }
+
+    resp = requests.request("POST", DISCORD_WEBHOOK_AZURE, json=payload, headers={
+                            "Content-Type": "application/json"})
+
     return resp.text, resp.status_code, resp.headers.items()
 
 
